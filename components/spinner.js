@@ -29,6 +29,7 @@ export default class ReactTurntable extends PureComponent {
 		clickText: "Click",
 		primaryColor: "#83AF9B",
 		secondaryColor: "#C8C8A9",
+		tertiaryColor: "#EFECCA",
 		fontStyle: {
 			color: "#fff",
 			size: "14px",
@@ -46,6 +47,7 @@ export default class ReactTurntable extends PureComponent {
 		clickText: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 		primaryColor: PropTypes.string,
 		secondaryColor: PropTypes.string,
+		tertiaryColor: PropTypes.string,
 		speed: PropTypes.number,
 		duration: PropTypes.number,
 		onComplete: PropTypes.func,
@@ -69,12 +71,12 @@ export default class ReactTurntable extends PureComponent {
 				/>
 				{!hiddenButton &&
 					(Object.is(typeof clickText, "string") ? (
-						<div
+						<button
 							className="react-turntable-section-btn"
 							onClick={this.onStartRotate}
 						>
 							{clickText}
-						</div>
+						</button>
 					) : (
 						<div onClick={this.onStartRotate}>{clickText}</div>
 					))}
@@ -117,6 +119,7 @@ export default class ReactTurntable extends PureComponent {
 		const {
 			primaryColor,
 			secondaryColor,
+			tertiaryColor,
 			fontStyle: { fontVertical, fontWeight, fontFamily, size, color },
 		} = this.props;
 
@@ -124,9 +127,18 @@ export default class ReactTurntable extends PureComponent {
 			const _currentStartRotate = this.startRotate + this.awardRotate * i;
 			const _currentEndRotate = _currentStartRotate + this.awardRotate;
 			this.ctx.save();
-			i % 2 === 0
+			/*i % 2 === 0
 				? (ctx.fillStyle = primaryColor)
 				: (ctx.fillStyle = secondaryColor);
+			*/
+			
+			if (i % 3 === 0) {
+				ctx.fillStyle = primaryColor;
+			} else if (i % 3 === 1) {
+				ctx.fillStyle = secondaryColor;
+			} else {
+				ctx.fillStyle = tertiaryColor;
+			}
 			ctx.beginPath();
 			ctx.arc(
 				this.centerX,
@@ -192,8 +204,8 @@ export default class ReactTurntable extends PureComponent {
 		})();
 		window.cancelAnimationFrame =
 			window.cancelAnimationFrame || window.mozCancelAnimationFrame;
-	}
-	componentWillMount() {
+	}/*
+	componentDidMount() {
 		if (this.props.prizes.length < 2)
 			throw new Error(
 				"options prizes It needs to be an array , Not less than two"
@@ -201,7 +213,7 @@ export default class ReactTurntable extends PureComponent {
 	}
 	componentWillUnmount() {
 		this.destroyContext();
-	}
+	}*/
 	onStartRotate = () => {
 		const { speed, duration, onStart } = this.props;
 		if (this.state.isRotate) return;
